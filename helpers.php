@@ -43,7 +43,6 @@ function getColumnNamesFromTextFile($textFile)
  * 
  * ASSUMPTIONS:
  *    - Each data point is separated by a tab character. 
- * 
  */
 function getUsersFromTextFile($textFile, $columnNames) 
 {
