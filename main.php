@@ -17,8 +17,9 @@
     }
     
     $columnNames = getColumnNamesFromTextFile($textFile);
-    $users = getUsersFromTextFile($textFile, $columnNames);
-    // $users = formatUsers($users);
+    $rawUsers = getUsersFromTextFile($textFile, $columnNames);
+    $users = formatUsers($rawUsers);
+    $columnNames = formatColumnNames($columnNames);
 
     ?>
 

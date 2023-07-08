@@ -6,9 +6,7 @@ include 'constants.php';
  * This file is where the logic and/or functionality is to be handled. 
  * 
  * TODO:
- *      1.  formatData() should not be called in getUsersFromTextFile. Create the 
- *          function formatUsers() to split this up.
- *      2. Error handling throughout (Checking for nulls);
+ *      1. Error handling throughout (Checking for nulls);
  */
 
 
@@ -58,14 +56,29 @@ function getUsersFromTextFile($textFile, $columnNames)
         foreach ($columnNames as $index => $columnName) {
             $user[$columnName] = $lineArray[$index];
         }
-        $user = formatUser($user);
         
         array_push($users, $user);
-
     }
     return $users;
 }
 
+function formatUsers($users) 
+{
+    $result = [];
+    foreach ($users as $user) {
+        array_push($result, formatUser($user));
+    }
+    return $result;
+}
+
+/**
+ * Format the column names for the table headers by deleting City/State/Zip, which will be part of the address.
+ */
+function formatColumnNames($columnNames) 
+{
+    $namesToDelete = ['City/State/Zip'];
+    return array_diff($columnNames, $namesToDelete);
+}
 
 /**
  * Format data a user to be displayed in a table
@@ -81,12 +94,15 @@ function formatUser($user)
     $user['FirstName'] = ucfirst(strtolower($user['FirstName']));
 
     // 2. Display Address on separate lines, accounting for cities with multiple words.
-    $userAddress = explode(", ", $user['City/State/Zip']);
-    $userCity = $userAddress[0];
-    $userAddress = explode(" ", $userAddress[1]);
-    $userState = $userAddress[0];
-    $userZip = $userAddress[1];
-    $user['City/State/Zip'] = $userCity . "<br>" . $userState . "<br>" . $userZip;
+    $addressParts = explode(", ", $user['City/State/Zip']);
+    $city = $addressParts[0];
+    $stateZip = $addressParts[1];
+    $stateZipParts = explode(" ", $stateZip);
+    $user['Address'] = $user['Address'] . "<br>"
+        . $city . ", " . $stateZipParts[0] . "<br>"
+        . $stateZipParts[1];
+    unset($user['City/State/Zip']);
+
 
     // 3. Obfuscate email addresses by starring first portion (john@domain.com -> ****@domain.com)
     $emailParts = explode('@', $user['EmailAddress']);
