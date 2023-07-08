@@ -32,7 +32,7 @@
         </tr>
         <?php 
         foreach($users as $user) {
-            echo "<tr class='tableRow'>";
+            echo "<tr>";
             echo "<td>" . implode("</td><td>", $user);
             echo "</tr>";
         }
