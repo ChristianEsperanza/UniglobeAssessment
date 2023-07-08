@@ -1,0 +1,14 @@
+Parse the users_list.txt file and display the data in a table.
+
+1. Show First name in Title Case (JOHN -> John)
+2. Display Address like this:
+	123 Main St.
+	Los Angeles, CA
+	90210
+3. Obfuscate email addresses by starring first portion (john@domain.com -> ****@domain.com)
+4. Show gender as M or F
+5. Show DateCreated in this format 2018-03-29 (Year-Month-Day)
+6. Highlight their name with a link to http://domain.com/index.php?user=UNIQUEID (using the UniqueID from the data)
+7. Don't show their SSN number
+
+

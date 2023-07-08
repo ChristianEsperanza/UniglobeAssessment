@@ -1,0 +1,14 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    background-color: aquamarine;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+tr:hover {background-color: coral;}
