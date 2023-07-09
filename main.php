@@ -12,15 +12,12 @@
     include 'helpers.php';
 
     $textFile=openTextFile("./users_list.txt"); 
-    if (!$textFile) {
-        // TODO: Error handle here
-    }
-    
+
     $columnNames = getColumnNamesFromTextFile($textFile);
     $rawUsers = getUsersFromTextFile($textFile, $columnNames);
     $users = formatUsers($rawUsers);
     $columnNames = formatColumnNames($columnNames);
-
+    
     ?>
 
 

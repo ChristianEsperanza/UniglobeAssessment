@@ -4,27 +4,34 @@ include 'constants.php';
 
 /**
  * This file is where the logic and/or functionality is to be handled. 
- * 
- * TODO:
- *      1. Error handling throughout (Checking for nulls);
  */
 
-
 /**
- * Function to read the text file located at the given file path.
+ * Function to read the text file located at the given file path. Throws error if file opening
+ * encounters error.
+ * PARAMS:
+ *    $filepath - String pointing to filepath.
+ * RETURNS: 
+ *    $file - Resource binded to a stream.
  */
 function openTextFile($filePath)
 {
-    $file = fopen($filePath, "r") or die("Unable to open file");
-    return $file;
+    if (!file_exists($filePath)) {
+        die("File not found");
+    } else {
+        $file = fopen($filePath, "r") or die("Unable to open file");
+        return $file;
+    }
 }
 
 
 /**
- * Read first line of the text file to get the column names. 
- * ASSUMPTIONS:
- *    - The first line of every text file used will be the column names. 
- * 
+ * Reads first line of a given text file. The first line of the text file MUST contain the column 
+ * names.
+ * PARAMS: 
+ *   $textFile - A text file resource
+ * RETURNS: 
+ *   Array of strings.
  */
 function getColumnNamesFromTextFile($textFile) 
 {
@@ -41,6 +48,11 @@ function getColumnNamesFromTextFile($textFile)
  * 
  * ASSUMPTIONS:
  *    - Each data point is separated by a tab character. 
+ * PARAMS:
+ *     $textFile - Text file resource.
+ *     $columnNames - Array of strings.
+ * RETURNS:
+ *     $users - Array of users. 
  */
 function getUsersFromTextFile($textFile, $columnNames) 
 {
@@ -62,6 +74,13 @@ function getUsersFromTextFile($textFile, $columnNames)
     return $users;
 }
 
+/**
+ * Formats all users in the array that is passed in.
+ * PARAMS:
+ *      $users - Array of users.
+ * RETURNS: 
+ *      $result - Formatted array that was passed in.
+ */
 function formatUsers($users) 
 {
     $result = [];
@@ -73,6 +92,11 @@ function formatUsers($users)
 
 /**
  * Format the column names for the table headers by deleting City/State/Zip, which will be part of the address.
+ * If other column names need to be deleted, the column name can be added to the $namesToDelete array.
+ * PARAMS:
+ *      $columnNames - String array.
+ * RETURNS: 
+ *      $columnNames - String array.
  */
 function formatColumnNames($columnNames) 
 {
@@ -82,11 +106,13 @@ function formatColumnNames($columnNames)
 
 /**
  * Format data a user to be displayed in a table
- * Takes in an array that represents a user and returns a correctly formatted user.
  * ASSUMPTIONS:
- *    - Given there are usually more gender options for users, I decided to split gender formatting into a separate 
+ *    - Given there are usually more gender options for users, I took creative liberty to split gender formatting into a separate 
  *        function so it can easily be adjusted as needed. 
- * 
+ * PARAMS:
+ *      $user - Array containing user data.
+ * RETURNS:
+ *      $user - Array containing formatted user data.
  */
 function formatUser($user) 
 {
@@ -103,7 +129,6 @@ function formatUser($user)
         . $stateZipParts[1];
     unset($user['City/State/Zip']);
 
-
     // 3. Obfuscate email addresses by starring first portion (john@domain.com -> ****@domain.com)
     $emailParts = explode('@', $user['EmailAddress']);
     $username = $emailParts[0];
@@ -116,7 +141,6 @@ function formatUser($user)
     // 5. Show DateCreated in this format 2018-03-29 (Year-Month-Day)
     $user['DateCreated'] = date('Y m d', strtotime($user['DateCreated']));
     $user['DateCreated'] = str_replace(" ", "-", $user['DateCreated']);
-    
 
     // 6. Highlight their name with a link to http://domain.com/index.php?user=UNIQUEID (using the UniqueID from the data)
     $user['UniqueID'] = "<a href=" . BASE_USER_DOMAIN_URL . $user['UniqueID'] . ">" . $user['UniqueID'] ."</a>";
@@ -129,7 +153,11 @@ function formatUser($user)
 
 
 /**
- * Helper function to format gender
+ * Helper function to format gender.
+ * PARAMS:
+ *      $gender - String.
+ * RETURNS:
+ *      $gender - String, formatted accordingly.
  */
 function formatGender($gender) {
     switch ($gender) {
